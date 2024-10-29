@@ -1,0 +1,5 @@
+{
+  "prettier.endOfLine": "lf",
+  "VSCodeCounter.endOfLine": "\n",
+  "editor.formatOnSave": true
+}

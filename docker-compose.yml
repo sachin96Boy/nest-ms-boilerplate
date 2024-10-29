@@ -1,0 +1,133 @@
+version: '3'
+services:
+  gateway:
+    build:
+      dockerfile: ./D_Gateway.Dockerfile
+    restart: always
+    hostname: gateway
+    volumes:
+      - ./api-gateway:/usr/local/apps/spare_parts/gateway/container/code
+      - /usr/local/apps/spare_parts/gateway/container/code/node_modules/
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+  user:
+    build:
+      dockerfile: ./D_User.Dockerfile
+    restart: always
+    hostname: user
+    volumes:
+      - ./services/user-service:/usr/local/apps/spare_parts/user/container/inside/code
+      - /usr/local/apps/spare_parts/user/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  parts_ad:
+    build:
+      dockerfile: ./D_PartsAdService.Dockerfile
+    restart: always
+    hostname: parts_ad
+    volumes:
+      - ./services/parts-ad-service:/usr/local/apps/spare_parts/parts_ad/container/inside/code
+      - /usr/local/apps/spare_parts/parts_ad/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  site_ad:
+    build:
+      dockerfile: ./D_SiteAdService.Dockerfile
+    restart: always
+    hostname: site_ad
+    volumes:
+      - ./services/site-ad-service:/usr/local/apps/spare_parts/site_ad/container/inside/code
+      - /usr/local/apps/spare_parts/site_ad/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  email:
+    build:
+      dockerfile: ./D_Email.Dockerfile
+    restart: always
+    hostname: email
+    volumes:
+      - ./services/email-service:/usr/local/apps/spare_parts/email/container/inside/code
+      - /usr/local/apps/spare_parts/email/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  sms:
+    build:
+      dockerfile: ./D_SMS.Dockerfile
+    restart: always
+    hostname: sms
+    volumes:
+      - ./services/sms-service:/usr/local/apps/spare_parts/sms/container/inside/code
+      - /usr/local/apps/spare_parts/sms/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  parts_requests:
+    build:
+      dockerfile: ./D_PartsRequests.Dockerfile
+    restart: always
+    hostname: parts_requests
+    volumes:
+      - ./services/parts-request-service:/usr/local/apps/spare_parts/parts_requests/container/inside/code
+      - /usr/local/apps/spare_parts/parts_requests/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  payment:
+    build:
+      dockerfile: ./D_Payment.Dockerfile
+    restart: always
+    hostname: payment
+    volumes:
+      - ./services/payment-gateway-service:/usr/local/apps/spare_parts/payment/container/inside/code
+      - /usr/local/apps/spare_parts/payment/container/inside/code/node_modules/
+    env_file:
+      - .env
+    networks:
+      - backend
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning 
+    volumes: 
+      - cache:/data
+    networks:
+      - backend
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'SPARE_PARTS'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '9899'
+      MYSQL_ROOT_PASSWORD: '9899'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysqldb:/var/lib/mysql
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+volumes:
+  cache:
+  mysqldb:
+  
