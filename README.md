@@ -1,5 +1,4 @@
-# Spare-Parts-System-API
-Spare Parts and Insurance Estimations Platform API
+# Nest-MS Boilerplate
 
 Rename .env.example as .env
 To build the docker container - run `docker-compose up -d --build`.
